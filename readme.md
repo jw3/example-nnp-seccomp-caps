@@ -1,7 +1,13 @@
 seccomp nnp caps
 ===
 
-as regular user run ./run.sh
+tested on rocky 9, hardcoded to rocky user atm
+
+needs cmake and build tools, seccomp and caps dev libs
+
+## run
+
+as rocky run ./run.sh
 
 ## tests
 1. file caps vs nnp
