@@ -3,16 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/prctl.h>
 
-#ifndef PR_GET_NO_NEW_PRIVS
-#define PR_GET_NO_NEW_PRIVS 39
-#endif
-
-static void print_nnp(const char *tag) {
-  int r = prctl(PR_GET_NO_NEW_PRIVS, 0, 0, 0, 0);
-  if (r == -1) perror("PR_GET_NO_NEW_PRIVS"); else printf("%s NNP=%d\n", tag, r);
-}
+#include "common.h"
 
 int main(int argc, char **argv) {
   const char *prog = (argc > 1) ? argv[1] : "./probe_uname";
