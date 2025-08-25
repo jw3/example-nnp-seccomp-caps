@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <stdio.h>
 
+extern char **environ;
+
 static void die(const char *m) {
   perror(m);
   _exit(127);
@@ -23,6 +25,6 @@ int main(int argc, char **argv) {
   cap_free(c);
   if (prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_BIND_SERVICE, 0, 0) == -1) die("prctl AMBIENT_RAISE");
   if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0) == -1) die("prctl NNP");
-  execvp(argv[1], &argv[1]);
-  die("execvp");
+  execve(argv[1], &argv[1], environ);
+  die("execve");
 }

@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <stdio.h>
 
+extern char **environ;
+
 int main(int argc, char **argv) {
   if (argc < 2) {
     fprintf(stderr, "usage: nocap_exec <program> [args...]\n");
@@ -14,7 +16,7 @@ int main(int argc, char **argv) {
   cap_set_proc(c);
   cap_free(c);
   prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_CLEAR_ALL, 0, 0, 0);
-  execvp(argv[1], &argv[1]);
-  perror("execvp");
+  execve(argv[1], &argv[1], environ);
+  perror("execve");
   return 127;
 }

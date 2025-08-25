@@ -58,17 +58,23 @@ if [ "$CAN_SETCAP" -eq 1 ]; then
   info "Tagged $CAPBASH with cap_sys_admin=ep"
 
   say "1A) NNP OFF -> expect CAP_SYS_ADMIN appears via file cap"
-  if "$CAPBASH" -c 'capsh --has-p=cap_sys_admin' >/dev/null 2>&1; then ok "NNP off: CAP_SYS_ADMIN observed"; else bad "NNP off: CAP_SYS_ADMIN not observed"; fi
+  if "$CAPBASH" -c 'capsh --has-p=cap_sys_admin' >/dev/null 2>&1; then
+    ok "NNP off: CAP_SYS_ADMIN observed"
+  else
+    bad "NNP off: CAP_SYS_ADMIN not observed"
+  fi
 
   say "1B) NNP ON (demoted uid/gid) -> file-cap elevation should be suppressed"
-  if setpriv --reuid 65534 --regid 65534 --clear-groups --no-new-privs -- "$CAPBASH" -c 'capsh --has-p=cap_sys_admin' >/dev/null 2>&1; then
+  if setpriv --reuid 65534 --regid 65534 --clear-groups --no-new-privs -- \
+       "$CAPBASH" -c 'capsh --has-p=cap_sys_admin' >/dev/null 2>&1; then
     bad "NNP on: CAP_SYS_ADMIN still present (unexpected)"
   else
     ok "NNP on: CAP_SYS_ADMIN suppressed as expected"
   fi
 
   say "1C) Drop from bounding set -> elevation blocked even with NNP OFF"
-  if setpriv --bounding-set=~cap_sys_admin -- "$CAPBASH" -c 'capsh --has-p=cap_sys_admin' >/dev/null 2>&1; then
+  if setpriv --bounding-set=~cap_sys_admin -- \
+       "$CAPBASH" -c 'capsh --has-p=cap_sys_admin' >/dev/null 2>&1; then
     bad "Bounding set dropped but CAP_SYS_ADMIN appeared"
   else
     ok "Bounding set drop prevented elevation"
@@ -90,7 +96,6 @@ else
   info "Skipping Test 2 (need unshare + gcc + libcap-devel)."
 fi
 
-# Test 3: Seccomp install paths (CAP_SYS_ADMIN avoids NNP)
 if [ -x "$SCHELPER" ]; then
   say "Test 3: Seccomp install paths (CAP_SYS_ADMIN avoids needing NNP)"
 
