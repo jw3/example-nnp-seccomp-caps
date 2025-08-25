@@ -173,7 +173,7 @@ if [ -x "$SCHELPER" ]; then
     OUT="$(setpriv --no-new-privs -- "$SCEXEC" "$SCSTACK2" || true)"
     echo "$OUT" | grep -q STACK_UNAME_EPERM  && A=1 || A=0
     echo "$OUT" | grep -q STACK_GETTID_EPERM && B=1 || B=0
-    if [ $A -eq 1 ] && [ $B -eq 1 ]; then ok "Second filter loaded; uname and gettid both blocked"; else printf "%s\n" "$OUT" | sed 's/^/      out: /'; bad "Monotonic check failed"; fi
+    if [ "$A" -eq 1 ] && [ "$B" -eq 1 ]; then ok "Second filter loaded; uname and gettid both blocked"; else printf "%s\n" "$OUT" | sed 's/^/      out: /'; bad "Monotonic check failed"; fi
   else
     info "Skipping 3F (missing sc_demo_exec or sc_stack2)."
   fi
