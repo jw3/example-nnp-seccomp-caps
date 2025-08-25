@@ -16,18 +16,21 @@ int main(void) {
     perm = (fv == CAP_SET);
     cap_free(c);
   }
+
   printf("CAP_BIND_EFF=%d PERM=%d\n", eff, perm);
   int s = socket(AF_INET, SOCK_STREAM, 0);
   if (s < 0) {
     perror("socket");
     return 1;
   }
+
   int on = 1;
   setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
   struct sockaddr_in a = {0};
   a.sin_family = AF_INET;
   a.sin_port = htons(602);
   a.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+
   if (bind(s, (struct sockaddr *) &a, sizeof(a)) == 0) {
     puts("BIND_PRIV_OK");
     close(s);

@@ -12,6 +12,7 @@ int main(void) {
     perror("seccomp_init");
     return 1;
   }
+
   const char *nnp = getenv("SC_DEMO_NNP");
   if (nnp && nnp[0] == '0') {
     if (seccomp_attr_set(ctx, SCMP_FLTATR_CTL_NNP, 0) != 0) {
@@ -19,16 +20,19 @@ int main(void) {
       return 90;
     }
   }
+
   if (seccomp_rule_add(ctx, SCMP_ACT_ERRNO(EPERM), SCMP_SYS(uname), 0)) {
     perror("seccomp_rule_add");
     return 2;
   }
+
   print_nnp("before_load");
   if (seccomp_load(ctx)) {
     perror("seccomp_load");
     return 3;
   }
   print_nnp("after_load");
+
   struct utsname u;
   errno = 0;
   int r = uname(&u);
@@ -36,6 +40,7 @@ int main(void) {
     puts("SECCOMP_OK");
     return 0;
   }
+
   if (r == 0) {
     fputs("uname unexpectedly succeeded\n", stderr);
     return 4;
