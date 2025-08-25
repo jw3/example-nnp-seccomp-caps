@@ -17,4 +17,6 @@ needs cmake and build tools, seccomp and caps dev libs
 
 ## run
 
-as rocky run ./run.sh
+running with sudo will execute all tests, running as rocky will skip 1, 3D, 3D-fcaps, 4
+
+`run.sh`
