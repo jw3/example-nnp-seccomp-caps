@@ -4,7 +4,6 @@
 #include <linux/capability.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 static void die(const char *m) {
   perror(m);
@@ -22,14 +21,7 @@ int main(int argc, char **argv) {
   if (cap_set_flag(c, CAP_INHERITABLE, 1, &v, CAP_SET) == -1) die("cap_set_flag INH");
   if (cap_set_proc(c) == -1) die("cap_set_proc");
   cap_free(c);
-#ifndef PR_CAP_AMBIENT
-#define PR_CAP_AMBIENT 47
-#define PR_CAP_AMBIENT_RAISE 2
-#endif
   if (prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_NET_BIND_SERVICE, 0, 0) == -1) die("prctl AMBIENT_RAISE");
-#ifndef PR_SET_NO_NEW_PRIVS
-#define PR_SET_NO_NEW_PRIVS 38
-#endif
   if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0) == -1) die("prctl NNP");
   execvp(argv[1], &argv[1]);
   die("execvp");

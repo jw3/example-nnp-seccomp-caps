@@ -13,10 +13,6 @@ int main(int argc, char **argv) {
   cap_clear(c);
   cap_set_proc(c);
   cap_free(c);
-#ifndef PR_CAP_AMBIENT
-#define PR_CAP_AMBIENT 47
-#define PR_CAP_AMBIENT_CLEAR_ALL 5
-#endif
   prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_CLEAR_ALL, 0, 0, 0);
   execvp(argv[1], &argv[1]);
   perror("execvp");
